@@ -51,5 +51,6 @@ export class NgKiniAuthModule {
 }
 
 export class KiniAuthModuleConfig {
-    httpURL: string;
+    guestHttpURL: string;
+    accessHttpURL: string;
 }

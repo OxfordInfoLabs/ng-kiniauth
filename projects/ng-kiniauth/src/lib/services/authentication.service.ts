@@ -1,5 +1,4 @@
 import { Injectable, Optional } from '@angular/core';
-import { BaseService } from './base.service';
 import { KiniAuthModuleConfig } from '../../ng-kiniauth.module';
 import { KinibindRequestService } from 'ng-kinibind';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -7,17 +6,17 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 @Injectable({
     providedIn: 'root'
 })
-export class AuthenticationService extends BaseService {
+export class AuthenticationService {
 
     public authUser: BehaviorSubject<any> = new BehaviorSubject(null);
 
     constructor(private kbRequest: KinibindRequestService,
-                @Optional() config: KiniAuthModuleConfig) {
-        super(config);
+                private config: KiniAuthModuleConfig) {
+
     }
 
     public getLoggedInUser(): any {
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/admin/user')).toPromise()
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user').toPromise()
             .then(res => {
                 if (res) {
                     this.setSessionUser(res);
@@ -28,7 +27,7 @@ export class AuthenticationService extends BaseService {
     }
 
     public login(username: string, password: string) {
-        const request = this.constructHttpURL(`/guest/auth/login?emailAddress=${username}&password=${password}`);
+        const request = this.config.guestHttpURL + `/auth/login?emailAddress=${username}&password=${password}`;
         return this.kbRequest.makeGetRequest(request).toPromise().then((user: any) => {
 
             if (user === 'REQUIRES_2FA') {
@@ -40,13 +39,13 @@ export class AuthenticationService extends BaseService {
     }
 
     public generateTwoFactorSettings() {
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/guest/auth/twoFactorSettings'))
+        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/twoFactorSettings')
             .toPromise()
     }
 
     public authenticateNewTwoFactor(code, secret) {
         return this.kbRequest.makeGetRequest(
-            this.constructHttpURL('/guest/auth/newTwoFactor'),
+            this.config.guestHttpURL + '/auth/newTwoFactor',
             {
                 params: { code, secret }
             }
@@ -59,7 +58,7 @@ export class AuthenticationService extends BaseService {
     }
 
     public authenticateTwoFactor(code) {
-        const url = this.constructHttpURL(`/guest/auth/twoFactor?code=${code}`);
+        const url = this.config.guestHttpURL + `/auth/twoFactor?code=${code}`;
         return this.kbRequest.makeGetRequest(url).toPromise()
             .then(result => {
                 if (result) {
@@ -72,7 +71,7 @@ export class AuthenticationService extends BaseService {
     }
 
     public disableTwoFactor() {
-        const url = this.constructHttpURL('/guest/auth/disableTwoFA');
+        const url = this.config.guestHttpURL + '/auth/disableTwoFA';
         return this.kbRequest.makeGetRequest(url).toPromise().then(user => {
             this.setSessionUser(user);
         });
@@ -84,14 +83,14 @@ export class AuthenticationService extends BaseService {
 
     public emailAvailable(emailAddress) {
         return this.kbRequest.makeGetRequest(
-            this.constructHttpURL(`/guest/auth/emailExists?emailAddress=${emailAddress}`)
+            this.config.guestHttpURL + `/auth/emailExists?emailAddress=${emailAddress}`
         ).toPromise().then(res => {
             return !res;
         });
     }
 
     public validateUserPassword(emailAddress, password) {
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/guest/auth/validatePassword'), {
+        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/validatePassword', {
             params: {
                 emailAddress,
                 password
@@ -100,7 +99,7 @@ export class AuthenticationService extends BaseService {
     }
 
     public changeUserEmailAddress(newEmailAddress, password) {
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/admin/user/changeEmail'), {
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeEmail', {
             params: {
                 newEmailAddress,
                 password
@@ -112,7 +111,7 @@ export class AuthenticationService extends BaseService {
     }
 
     public changeUserBackEmailAddress(newEmailAddress, password) {
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/admin/user/changeBackupEmail'), {
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeBackupEmail', {
             params: {
                 newEmailAddress,
                 password
@@ -124,7 +123,7 @@ export class AuthenticationService extends BaseService {
     }
 
     public changeUserMobile(newMobile, password) {
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/admin/user/changeMobile'), {
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeMobile', {
             params: {
                 newMobile,
                 password
@@ -142,7 +141,7 @@ export class AuthenticationService extends BaseService {
     public logout() {
         this.authUser.next(null);
         sessionStorage.clear();
-        return this.kbRequest.makeGetRequest(this.constructHttpURL('/guest/auth/logout')).toPromise();
+        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/logout').toPromise();
     }
 
     public setSessionUser(user) {
