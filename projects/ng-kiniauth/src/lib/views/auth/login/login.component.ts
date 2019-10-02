@@ -16,6 +16,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public email: string;
     public password: string;
     public loading = false;
+    public loginError = false;
     public twoFA = false;
     public twoFACode: string;
     public twoFAError = false;
@@ -31,6 +32,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     }
 
     public login() {
+        this.loginError = false;
         if (this.email && this.password) {
             this.loading = true;
             return this.authService.login(this.email, this.password)
@@ -44,8 +46,8 @@ export class LoginComponent extends BaseComponent implements OnInit {
                     }
                 })
                 .catch(err => {
+                    this.loginError = true;
                     this.loading = false;
-                    console.log('** ERROR ** -> ', err);
                 });
         }
     }

@@ -9,13 +9,12 @@
 
     <input placeholder="Enter verification code" [(ngModel)]="twoFACode">
 
-    <button class="button small-button brand-button" (click)="verifyCode()">
+    <button class="but butsm m0" (click)="verifyCode()">
         Verify Code
     </button>
 
-    <h5>Backup Code</h5>
-    <p>The following code can be used for manual setup if you are unable to scan the QR code.
-        This can also be used to recover your account if your mobile phone gets lost or stolen.</p>
+    <h5 class="mt2">Backup Code</h5>
+    <p>The following code can be used for manual setup if you are unable to scan the QR code.</p>
 
     <p>Your Two Factor backup code is: <strong>{{settings.secret}}</strong></p>
 

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { BaseComponent } from '../../base-component';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'ka-two-factor',
@@ -15,7 +16,8 @@ export class TwoFactorComponent extends BaseComponent implements OnInit {
     public settings: any;
     public twoFACode: string;
 
-    constructor(public kcAuthService: AuthenticationService) {
+    constructor(public kcAuthService: AuthenticationService,
+                private router: Router) {
         super(kcAuthService);
     }
 
@@ -35,7 +37,7 @@ export class TwoFactorComponent extends BaseComponent implements OnInit {
     public verifyCode() {
         this.authService.authenticateNewTwoFactor(this.twoFACode, this.settings.secret)
             .then(res => {
-                console.log(res);
+                this.saved.emit(res);
             });
     }
 

@@ -12,6 +12,8 @@
         <input type="password" placeholder="Password" name="password" [(ngModel)]="password"
                (keyup.enter)="login()" required>
 
+        <p class="error" *ngIf="loginError">Email or password incorrect, please check and try again.</p>
+
         <button class="button small-button" *ngIf="!loading" (click)="login()"
                 [disabled]="!email || !password">Sign in
         </button>

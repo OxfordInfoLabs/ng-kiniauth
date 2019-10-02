@@ -122,5 +122,5 @@
 
 <ka-inline-modal *ngIf="enableTwoFa" (closed)="enableTwoFa = false">
     <h1>Enable Two Factor Authentication</h1>
-    <ka-two-factor (saved)="editBackup = false;"></ka-two-factor>
+    <ka-two-factor (saved)="enableTwoFa = false;"></ka-two-factor>
 </ka-inline-modal>
