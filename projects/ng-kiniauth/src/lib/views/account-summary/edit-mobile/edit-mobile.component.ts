@@ -37,6 +37,13 @@ export class EditMobileComponent extends BaseComponent implements OnInit {
                         .then(user => {
                             this.user = user;
                             this.saved.emit(user);
+                        })
+                        .catch(err => {
+                            if (err.error.validationErrors.mobileNumber.regexp.errorMessage) {
+                                this.saveError = 'Number error: ' + err.error.validationErrors.mobileNumber.regexp.errorMessage;
+                            } else {
+                                this.saveError = 'There was a problem changing the mobile number, please check and try again.'
+                            }
                         });
                 } else {
                     this.saveError = 'Password incorrect. Mobile number has not been updated.';

@@ -5,8 +5,10 @@
 
 <div class="mb2">
     <label>Enter the new email address you want to use.</label>
-    <input type="email" placeholder="New email address" [(ngModel)]="newEmailAddress" (change)="checkEmail()">
+    <input type="email" placeholder="New email address" [(ngModel)]="newEmailAddress"
+           (change)="checkEmail()" email #email="ngModel">
     <span style="color: red" *ngIf="!emailAvailable">An account already exists with this email address</span>
+    <span style="color: red" *ngIf="email.invalid">Not a valid email address</span>
 </div>
 
 <div class="mb2">
@@ -15,7 +17,7 @@
 </div>
 
 <button type="button" class="but butsm"
-        [disabled]="!emailAvailable || !newEmailAddress || !currentPassword"
+        [disabled]="!emailAvailable || !newEmailAddress || !currentPassword || email.invalid"
         (click)="saveEmailAddress()">
     Update email address
 </button>
