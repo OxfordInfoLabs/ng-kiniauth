@@ -106,21 +106,21 @@
 </div>
 
 <ka-inline-modal *ngIf="editEmail" (closed)="editEmail = false">
-    <h1>Edit Email Address</h1>
+    <h3>Edit Email Address</h3>
     <ka-edit-email [authenticationService]="authService" (saved)="editEmail = false;"></ka-edit-email>
 </ka-inline-modal>
 
 <ka-inline-modal *ngIf="editMobile" (closed)="editMobile = false">
-    <h1>Edit Mobile Phone Number</h1>
+    <h3>Edit Mobile Phone Number</h3>
     <ka-edit-mobile [authenticationService]="authService" (saved)="editMobile = false;"></ka-edit-mobile>
 </ka-inline-modal>
 
 <ka-inline-modal *ngIf="editBackup" (closed)="editBackup = false">
-    <h1>Edit Backup Email Address</h1>
+    <h3>Edit Backup Email Address</h3>
     <ka-edit-backup-email [authenticationService]="authService" (saved)="editBackup = false;"></ka-edit-backup-email>
 </ka-inline-modal>
 
 <ka-inline-modal *ngIf="enableTwoFa" (closed)="enableTwoFa = false">
-    <h1>Enable Two Factor Authentication</h1>
+    <h3>Enable Two Factor Authentication</h3>
     <ka-two-factor (saved)="enableTwoFa = false;"></ka-two-factor>
 </ka-inline-modal>
