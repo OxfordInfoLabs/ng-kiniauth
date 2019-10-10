@@ -7,11 +7,14 @@ import { EditEmailComponent } from './lib/views/account-summary/edit-email/edit-
 import { TwoFactorComponent } from './lib/views/account-summary/two-factor/two-factor.component';
 import { LoginComponent } from './lib/views/auth/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthenticationService } from './lib/services/authentication.service';
 import { InlineModalComponent } from './lib/views/inline-modal/inline-modal.component';
 import { BaseComponent } from './lib/views/base-component';
 import { EditBackupEmailComponent } from './lib/views/account-summary/edit-backup-email/edit-backup-email.component';
 import { EditMobileComponent } from './lib/views/account-summary/edit-mobile/edit-mobile.component';
+import { AddressBookComponent } from './lib/views/address-book/address-book.component';
+import { ContactDetailsComponent } from './lib/views/contact-details/contact-details.component';
+import { CountryCodesDirective } from './lib/directives/country-codes/country-codes.directive';
+import { PostcodeLookupDirective } from './lib/directives/postcode-lookup/postcode-lookup.directive';
 
 @NgModule({
     declarations: [
@@ -22,7 +25,11 @@ import { EditMobileComponent } from './lib/views/account-summary/edit-mobile/edi
         InlineModalComponent,
         BaseComponent,
         EditBackupEmailComponent,
-        EditMobileComponent
+        EditMobileComponent,
+        AddressBookComponent,
+        ContactDetailsComponent,
+        CountryCodesDirective,
+        PostcodeLookupDirective
     ],
     imports: [
         NgKinibindModule,
@@ -35,7 +42,9 @@ import { EditMobileComponent } from './lib/views/account-summary/edit-mobile/edi
         AccountSummaryComponent,
         EditEmailComponent,
         TwoFactorComponent,
-        LoginComponent
+        LoginComponent,
+        AddressBookComponent,
+        ContactDetailsComponent
     ]
 })
 export class NgKiniAuthModule {

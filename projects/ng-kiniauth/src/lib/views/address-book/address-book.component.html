@@ -1,0 +1,41 @@
+<kb-bind source="/internal/contacts" method="GET" [model]="contacts" [reloadTrigger]="reload"></kb-bind>
+
+<div class="contacts-wrapper">
+
+    <div class="contact-block new" [routerLink]="[editContactURL]">
+        <span style="font-size: 2rem"><b>+</b></span>
+        <span>New Contact</span>
+    </div>
+
+    <div class="contact-block existing" *ngFor="let contact of contacts.data; let i = index">
+        <div class="contact-loading" *ngIf="contactLoading === i">
+            <span>loading...</span>
+        </div>
+
+        <div class="flex align-center justify-between" style="width: 100%">
+            <p class="m0"><strong>{{contact.name}}</strong></p>
+            <button *ngIf="contact.type !== 'Main'"
+                    (click)="deleteContact(contact.id)">
+                <span style="font-size: 2rem" class="error"><b>x</b></span>
+            </button>
+        </div>
+
+        <p [innerHTML]="contact.htmlAddressLinesString"></p>
+        <p><strong>Email: </strong>{{contact.emailAddress}}</p>
+
+        <div style="width: 100%" class="flex align-center justify-between">
+            <p class="flex align-center confirm1 m0" *ngIf="contact.defaultAccountContact === '1'">
+                <span>&#10004;</span>&nbsp;&nbsp;Default contact
+            </p>
+            <button class="button small-button brand-button" *ngIf="contact.defaultAccountContact === '0'"
+                    (click)="makeDefault(contact.id)">
+                Make Default
+            </button>
+            <a class="edit" [routerLink]="[editContactURL + '/' + contact.id]">
+                Edit
+            </a>
+        </div>
+
+    </div>
+
+</div>

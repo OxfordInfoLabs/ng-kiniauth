@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PackagedProductService } from './packaged-product.service';
+import { ContactService } from './contact.service';
 import { NgKinibindModule } from 'ng-kinibind';
 
-describe('PackagedProductService', () => {
+describe('ContactService', () => {
     beforeEach(() => TestBed.configureTestingModule({
         imports: [
             NgKinibindModule
@@ -11,7 +11,7 @@ describe('PackagedProductService', () => {
     }));
 
   it('should be created', () => {
-    const service: PackagedProductService = TestBed.get(PackagedProductService);
+    const service: ContactService = TestBed.get(ContactService);
     expect(service).toBeTruthy();
   });
 });
