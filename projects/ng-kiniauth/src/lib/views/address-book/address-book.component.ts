@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input } from '@angular/core';
-import { KinibindModel } from 'ng-kinibind';
+import { KinibindModel, KinibindRequestService } from 'ng-kinibind';
 import { ContactService } from '../../services/contact.service';
 
 @Component({
@@ -10,25 +10,37 @@ import { ContactService } from '../../services/contact.service';
 export class AddressBookComponent {
 
     @Input() editContactURL: string;
+    @Input() deleteContactURL: string;
+    @Input() defaultContactURL: string;
+    @Input() source: string;
 
     public contacts: KinibindModel = new KinibindModel();
     public reload: EventEmitter<boolean> = new EventEmitter<boolean>();
     public contactLoading;
 
-    constructor(private contactService: ContactService) {
+    constructor(private contactService: ContactService,
+                private kbRequest: KinibindRequestService) {
     }
 
     public deleteContact(contactId) {
         const message = 'Are you sure you would like to delete this contact?';
         if (window.confirm(message)) {
-            this.contactService.deleteContact(contactId).then(() => {
+            return this.kbRequest.makeGetRequest(this.deleteContactURL, {
+                params: {
+                    contactId: contactId
+                }
+            }).toPromise().then(() => {
                 this.reload.next(true);
             });
         }
     }
 
     public makeDefault(contactId) {
-        this.contactService.setDefaultContact(contactId).then(() => {
+        return this.kbRequest.makeGetRequest(this.defaultContactURL, {
+            params: {
+                contactId: contactId
+            }
+        }).toPromise().then(() => {
             this.reload.next(true);
         });
     }

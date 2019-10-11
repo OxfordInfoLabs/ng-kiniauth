@@ -18,7 +18,7 @@ export class ContactService {
     }
 
     public deleteContact(contactId) {
-        return this.kbRequest.makeGetRequest('/internal/contacts/delete', {
+        return this.kbRequest.makeGetRequest('/contact/delete', {
             params: {
                 contactId: contactId
             }

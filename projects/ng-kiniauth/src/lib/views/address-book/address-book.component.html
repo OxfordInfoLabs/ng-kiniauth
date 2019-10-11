@@ -1,4 +1,4 @@
-<kb-bind source="/internal/contacts" method="GET" [model]="contacts" [reloadTrigger]="reload"></kb-bind>
+<kb-bind [source]="source" method="GET" [model]="contacts" [reloadTrigger]="reload"></kb-bind>
 
 <div class="contacts-wrapper">
 
@@ -14,20 +14,20 @@
 
         <div class="flex align-center justify-between" style="width: 100%">
             <p class="m0"><strong>{{contact.name}}</strong></p>
-            <button *ngIf="contact.type !== 'Main'"
-                    (click)="deleteContact(contact.id)">
-                <span style="font-size: 2rem" class="error"><b>x</b></span>
-            </button>
+            <a href="javascript:void(0)" (click)="deleteContact(contact.id)" style="text-decoration: none">
+                <span style="font-size: 1.5rem; color: darkred"><b>x</b></span>
+            </a>
         </div>
 
         <p [innerHTML]="contact.htmlAddressLinesString"></p>
+        <p style="margin-bottom: 0"><strong>Telephone: </strong>{{contact.telephoneNumber}}</p>
         <p><strong>Email: </strong>{{contact.emailAddress}}</p>
 
         <div style="width: 100%" class="flex align-center justify-between">
-            <p class="flex align-center confirm1 m0" *ngIf="contact.defaultAccountContact === '1'">
+            <p class="flex align-center confirm1 m0" *ngIf="contact.defaultContact">
                 <span>&#10004;</span>&nbsp;&nbsp;Default contact
             </p>
-            <button class="button small-button brand-button" *ngIf="contact.defaultAccountContact === '0'"
+            <button class="but butsm" *ngIf="!contact.defaultContact"
                     (click)="makeDefault(contact.id)">
                 Make Default
             </button>

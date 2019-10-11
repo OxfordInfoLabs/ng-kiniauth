@@ -1,263 +1,67 @@
-<form class="px2 py2 whitebk mb1" kbForm netPostcodeLookup #postcodeLookup="postcodeLookup"
-      netCountryCodes #countryCodes="countryCodes" [onInit]="true" [model]="contact"
+<form class="px2 py2 whitebk mb1" kbForm [model]="contact"
       [source]="source" [sourceParams]="sourceParams" [store]="store" #contactForm="ngForm"
       (onLoad)="sourceLoaded()" (onSave)="saved()">
 
     <div *ngIf="contact.data">
 
-        <label *ngIf="!hide.name">
-            <input type="text"  placeholder="Name" name="name" [(ngModel)]="contact.data.name" required>
-            Name of Business / Individual / Organisation
+        <label>
+            <input class="full" type="text" name="name" [(ngModel)]="contact.data.name" required>
+            Full Name
         </label>
 
-        <ng-template ngFor let-definition [ngForOf]="contact.data.additionalDataDefinition">
-
-            <ng-template [ngIf]="definition.dataType === 'Pick One'">
-
-                <label>
-                    <select [name]="definition.label"
-                            (selectionChange)="validationChange()"
-                            [(ngModel)]="contact.data.additionalData[definition.dataKey]">
-
-                        <option *ngFor="let typeKey of Object.keys(definition.typeConfig)"
-                                [value]="typeKey">
-                            {{definition.typeConfig[typeKey]}}
-                        </option>
-
-                    </select>
-                    {{definition.label}}
-                </label>
-
-
-            </ng-template>
-
-            <ng-template [ngIf]="definition.dataType === 'Text'">
-
-                <label *ngIf="!lodash.values(definition.depends).length || definition.dependsMatch > -1">
-                    <input type="text" [placeholder]="definition.label"
-                           [(ngModel)]="contact.data.additionalData[definition.dataKey]"
-                           [pattern]="definition.requiredPattern"
-                           [required]="definition.required"
-                           [name]="definition.label">
-                </label>
-
-            </ng-template>
-
-        </ng-template>
-
-        <label *ngIf="!hide.telephone && contact.data">
-            <input type="tel"  placeholder="0121 234 5678"
-                   name="telephone" (blur)="getTelNumber($event)">
-            Telephone Number
-            <span class="error" *ngIf="!validTel">The entered telephone number is not in a valid format.</span>
+        <label>
+            <input class="full" type="text" name="organisation" [(ngModel)]="contact.data.organisation">
+            Name of Business / Organisation
         </label>
 
-        <label *ngIf="!hide.fax && contact.data">
-            <input type="tel"  placeholder="0121 234 5678"
-                   name="faxNumber" (blur)="getFaxNumber($event.target)">
-            Fax Number
-            <span class="error" *ngIf="!validFax">The entered fax number is not in a valid format.</span>
+        <label>
+            <input type="text" class="full" name="addressStreet1"
+                   [(ngModel)]="contact.data.street1" required>
+            Address 1
         </label>
 
-        <p *ngIf="emailStatus === 'Valid' && contact.data.emailAddress">
-        <span class="email-verified accent py1">
-                Email verified
-        </span>
-        </p>
+        <label>
+            <input type="text" class="full" name="addressStreet2"
+                   [(ngModel)]="contact.data.street2">
+            Address 2
+        </label>
 
-        <p *ngIf="emailStatus === 'Pending' && contact.data.emailAddress">
-        <span class="email-verified warn py1">
-            Awaiting Verification
-        </span>
-        </p>
-
-        <div class="flex flex-wrap align-start justify-between" *ngIf="!hide.email">
-
-            <label class="flex1">
-                <input #emailModel="ngModel" type="email" placeholder="Email" name="email" required
-                       [(ngModel)]="contact.data.emailAddress" (blur)="isItemVerified('Email', emailModel.value)">
-                A verified email address is required before proceeding
-            </label>
-
-            <div class="mt050 pl1" *ngIf="emailStatus && emailStatus !== 'Valid'">
-                <button type="button" class="button small-button confirm-button"
-                        (click)="verifyEmail(emailModel.value)">
-                    verify email now
-                </button>
-            </div>
-        </div>
-
-        <div class="" *ngIf="enterVerificationCode && !hide.email">
-            <p class="bdark1 bold">Please enter the Authentication Code we've just sent
-                to the email above.</p>
-
-            <div class="flex flex-wrap align-start justify-between">
-                <label class="flex1 mb0">
-                    <input type="text" placeholder="Authentication code" #checkCode>
-                </label>
-
-                <div class="mt050 pl1">
-                    <button type="button" class="button small-button accent-button"
-                            (click)="checkVerificationCode(checkCode.value)">
-                        Check code
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-        <p class="error pt0" *ngIf="authCodeError">Invalid authentication code entered. Please check the email sent.</p>
-
-        <div *ngIf="readOnlyAddress">
-
-            <p *ngIf="contact.data.htmlAddressLinesStringNoNumbers"
-               [innerHTML]="contact.data.htmlAddressLinesStringNoNumbers"></p>
-
-
-            <button type="button" class="button small-button midgrey-button"
-                    (click)="readOnlyAddress = false">Change Address</button>
-
-        </div>
-
-        <div *ngIf="!readOnlyAddress">
+        <div class="flex align-center flex-wrap">
             <label>
-                <select name="country" [(ngModel)]="contact.data.country">
-                    <option *ngFor="let country of countryCodes.results" [value]="country.ISO2">{{country.NAME}}
-                    </option>
-                </select>
-                Country
-            </label>
-            <div class="flex justify-between align-center">
-
-                <label class="narrow">
-                    <input type="text" placeholder="Postcode" name="postcode"
-                           [(ngModel)]="contact.data.postcode" required>
-                </label>
-
-                <button type="button" class="button small-button brand-button"
-                        (click)="findAddress=enterManually=searchResults=false;"
-                        *ngIf="enterManually || searchResults">
-                    Search again
-                </button>
-            </div>
-
-
-            <div class="flex align-center mb2" *ngIf="!enterManually && !searchResults">
-                <button type="button" class="button small-button accent-button" [disabled]="!contact.data.postcode"
-                        (click)="postcodeLookup.search(contact.data.postcode, contact.data.country);findAddress = true">
-                    FIND ADDRESS
-                </button>
-                <span class="ib px1">|</span>
-                <button type="button" class="button small-button muted-button"
-                        (click)="enterManually=true;findAddress=searchResults=false;">
-                    Enter manually
-                </button>
-            </div>
-
-            <span *ngIf="findAddress && !postcodeLookup.results.length && !postcodeLookup.complete">
-                loading...
-            </span>
-
-            <label
-                *ngIf="findAddress && postcodeLookup.results.length && postcodeLookup.results[0].resultType === 'MATCH'">
-                <select name="searchAddressId" [(ngModel)]="contact.data.searchId" required
-                            (selectionChange)="addressId.next($event.value);findAddress=false;searchResults=true">
-                    <option *ngFor="let item of postcodeLookup.results" [value]="item.searchId">{{item.resultText}}
-                    </option>
-                </select>
-                Select your address
+                <input type="text" class="full" name="addressCity"
+                       [(ngModel)]="contact.data.city" required>
+                Town / City
             </label>
 
-            <label
-                *ngIf="findAddress && postcodeLookup.results.length && postcodeLookup.results[0].resultType === 'RESULTS'">
-                <select name="postcodeList"
-                            [(ngModel)]="contact.data.postcode" required
-                            (ngModelChange)="postcodeLookup.search(contact.data.postcode, contact.data.country)">
-                    <option *ngFor="let item of postcodeLookup.results"
-                                [value]="item.resultText">{{item.resultText}}
-                    </option>
-                </select>
-                Select your postcode
+            <label>
+                <input type="text" class="full" name="addressCounty"
+                       [(ngModel)]="contact.data.county" required>
+                State / County / Region
             </label>
-
-            <div *ngIf="searchResults">
-                <label>
-                    <input type="text"  placeholder="Organisation" name="addressOrganisation"
-                           [(ngModel)]="contact.data.organisation"
-                           disabled>
-                    Organisation
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressStreet1"
-                           [(ngModel)]="contact.data.street1"
-                           disabled>
-                    Address 1
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="Address 2" name="addressStreet2"
-                           [(ngModel)]="contact.data.street2"
-                           disabled>
-                    Address 2
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressCity"
-                           [(ngModel)]="contact.data.city"
-                           disabled>
-                    Town / City
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressCounty"
-                           [(ngModel)]="contact.data.county" disabled>
-                    State/County/Region
-                </label>
-
-            </div>
-
-            <div *ngIf="enterManually">
-                <label>
-                    <input type="text"  placeholder="" name="addressOrganisation"
-                           [(ngModel)]="contact.data.organisation">
-                    Organisation
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressStreet1"
-                           [(ngModel)]="contact.data.street1" required>
-                    Address 1
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressStreet2"
-                           [(ngModel)]="contact.data.street2">
-                    Address 2
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressCity"
-                           [(ngModel)]="contact.data.city" required>
-                    Town / City
-                </label>
-
-                <label>
-                    <input type="text"  placeholder="" name="addressCounty"
-                           [(ngModel)]="contact.data.county" required>
-                    State/County/Region
-                </label>
-
-
-            </div>
         </div>
+
+        <label>
+            <input type="text" name="country"
+                   [(ngModel)]="contact.data.countryCode" required>
+            Postcode
+        </label>
+
+        <label>
+            <input type="text" name="postcode"
+                   [(ngModel)]="contact.data.postcode" required>
+            Postcode
+        </label>
+
+        <label>
+            <input type="tel" name="telephoneNumber" [(ngModel)]="contact.data.telephoneNumber">
+            Telephone Number
+        </label>
 
     </div>
 
     <div class="flex justify-end mt2">
-        <button type="submit" class="mt2 button small-button confirm-button"
-                [disabled]="contactForm.invalid || emailStatus === 'Invalid' || emailStatus === 'Pending' ||
-                (contact.data && !contact.data.street1 && !contact.data.city && !contact.data.county)">
+        <button type="submit" class="mt2 but butsm"
+                [disabled]="(contact.data && !contact.data.street1 && !contact.data.city && !contact.data.county)">
             SAVE CHANGES
         </button>
     </div>

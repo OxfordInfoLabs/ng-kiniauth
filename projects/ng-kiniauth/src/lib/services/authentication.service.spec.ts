@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AuthenticationService } from './authentication.service';
 import { NgKinibindModule } from 'ng-kinibind';
-import { KiniAuthModuleConfig, NgKiniAuthModule } from '../../ng-kiniauth.module';
+import { KiniAuthModuleConfig } from '../../ng-kiniauth.module';
 
 describe('AuthenticationService', () => {
     const config: KiniAuthModuleConfig = {
