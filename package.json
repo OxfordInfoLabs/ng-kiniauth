@@ -1,12 +1,11 @@
 {
   "name": "application",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "watch": "ng build ng-kiniauth --watch",
     "build": "ng build ng-kiniauth",
     "test": "ng test ng-kiniauth"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "~7.2.0",
     "@angular/compiler": "~7.2.0",
