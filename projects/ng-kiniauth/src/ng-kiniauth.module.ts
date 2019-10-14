@@ -15,6 +15,8 @@ import { AddressBookComponent } from './lib/views/address-book/address-book.comp
 import { ContactDetailsComponent } from './lib/views/contact-details/contact-details.component';
 import { CountryCodesDirective } from './lib/directives/country-codes/country-codes.directive';
 import { PostcodeLookupDirective } from './lib/directives/postcode-lookup/postcode-lookup.directive';
+import { PaymentMethodsComponent } from './lib/views/payment-methods/payment-methods.component';
+import { PaymentMethodComponent } from './lib/views/payment-methods/payment-method/payment-method.component';
 
 @NgModule({
     declarations: [
@@ -29,7 +31,9 @@ import { PostcodeLookupDirective } from './lib/directives/postcode-lookup/postco
         AddressBookComponent,
         ContactDetailsComponent,
         CountryCodesDirective,
-        PostcodeLookupDirective
+        PostcodeLookupDirective,
+        PaymentMethodsComponent,
+        PaymentMethodComponent
     ],
     imports: [
         NgKinibindModule,
@@ -44,7 +48,8 @@ import { PostcodeLookupDirective } from './lib/directives/postcode-lookup/postco
         TwoFactorComponent,
         LoginComponent,
         AddressBookComponent,
-        ContactDetailsComponent
+        ContactDetailsComponent,
+        PaymentMethodsComponent
     ]
 })
 export class NgKiniAuthModule {

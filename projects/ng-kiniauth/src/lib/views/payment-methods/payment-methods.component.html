@@ -1,0 +1,55 @@
+<kb-bind source="/internal/account/stripeSources" [model]="paymentSources" [reloadTrigger]="reload"></kb-bind>
+
+<div class="payment-methods">
+
+    <div class="payment-method new" (click)="addPaymentMethod = true">
+
+        <span style="font-size: 2rem"><b>+</b></span>
+        <span>New Payment Method</span>
+
+    </div>
+
+    <div class="payment-method existing" *ngFor="let source of paymentSources.data; let i = index">
+        <div class="payment-loading" *ngIf="paymentLoading === i">
+            <span>loading ...</span>
+        </div>
+        <div class="flex align-center" style="width: 100%"
+             [ngClass]="{'justify-between': source.defaultCard === '1', 'justify-end': source.defaultCard === '0'}">
+            <span class="label infobk white" *ngIf="source.defaultCard === '1'">
+                Default
+            </span>
+            <button class="remove-button" (click)="removeCard(source.cardId, i)">
+                delete
+            </button>
+        </div>
+
+        <div class="card-outline">
+            <p class="brand">
+                <img src="assets/images/{{source.brand}}.png" [alt]="source.brand" height="30">
+            </p>
+            <div>
+                <p><span style="vertical-align: sub">**** **** ****</span> {{source.last4}}</p>
+                <p>
+                    <small>expires {{source.expMonth}} / {{source.expYear}}</small>
+                </p>
+            </div>
+
+            <p>{{source.name}}</p>
+        </div>
+
+        <div class="flex justify-end" style="width: 100%">
+            <button class="make-default button small-button brand-button" *ngIf="source.defaultCard === '0'"
+                    (click)="makeDefault(source.cardId, i)">
+                Make Default
+            </button>
+        </div>
+
+
+    </div>
+
+</div>
+
+<ka-inline-modal *ngIf="addPaymentMethod" (closed)="addPaymentMethod = false">
+    <h3>Add Payment Method</h3>
+    <ka-payment-method [environment]="environment"></ka-payment-method>
+</ka-inline-modal>

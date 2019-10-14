@@ -1,0 +1,66 @@
+.payment-methods
+    display: flex
+    flex-wrap: wrap
+    .payment-method
+        position: relative
+        width: 100%
+        padding: 1rem
+        max-width: 40%
+        min-width: 210px
+        height: 300px
+        border: 1px solid #eee
+        margin: 1%
+        display: flex
+        flex-direction: column
+        align-items: center
+        &.new
+            justify-content: center
+            &:hover
+                cursor: pointer
+                background-color: #F6F6F6
+        &.add
+            button
+                position: absolute
+                top: 0
+                right: 0
+        &.existing
+            flex-direction: column
+            justify-content: space-between
+            button
+                align-self: flex-end
+            .card-outline
+                display: flex
+                flex-direction: column
+                justify-content: space-between
+                width: 70%
+                padding: .5rem .7rem 1rem 1rem
+                border: 1px solid #eee
+                border-radius: 4px
+                min-height: 125px
+                box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1)
+                p
+                    margin: 0
+                .brand
+                    align-self: flex-end
+                .card-number
+                    align-self: center
+                .expiry
+                    align-self: center
+            .default
+                align-self: flex-end
+                color: #3a3ec4
+                padding: 5px 10px
+        .payment-loading
+            position: absolute
+            top: 0
+            bottom: 0
+            right: 0
+            left: 0
+            display: flex
+            justify-content: center
+            align-items: center
+            background-color: rgba(0, 0, 0, 0.2)
+            z-index: 9
+        net-stripe-card
+            width: 100%
+            align-self: flex-end
