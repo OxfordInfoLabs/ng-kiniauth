@@ -9,13 +9,13 @@
 
     <div class="contact-block existing" *ngFor="let contact of contacts.data; let i = index">
         <div class="contact-loading" *ngIf="contactLoading === i">
-            <span>loading...</span>
+            <span style="color: white">loading...</span>
         </div>
 
         <div class="flex align-center justify-between" style="width: 100%">
             <p class="m0"><strong>{{contact.name}}</strong></p>
-            <a href="javascript:void(0)" (click)="deleteContact(contact.id)" style="text-decoration: none">
-                <span style="font-size: 1.5rem; color: darkred"><b>x</b></span>
+            <a href="javascript:void(0)" class="delete-method" (click)="deleteContact(contact.id)" style="text-decoration: none">
+                &#10005;
             </a>
         </div>
 
