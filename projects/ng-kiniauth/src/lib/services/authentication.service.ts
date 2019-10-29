@@ -39,13 +39,13 @@ export class AuthenticationService {
     }
 
     public generateTwoFactorSettings() {
-        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/twoFactorSettings')
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/auth/twoFactorSettings')
             .toPromise()
     }
 
     public authenticateNewTwoFactor(code, secret) {
         return this.kbRequest.makeGetRequest(
-            this.config.guestHttpURL + '/auth/newTwoFactor',
+            this.config.accessHttpURL + '/auth/newTwoFactor',
             {
                 params: { code, secret }
             }
@@ -71,7 +71,7 @@ export class AuthenticationService {
     }
 
     public disableTwoFactor() {
-        const url = this.config.guestHttpURL + '/auth/disableTwoFA';
+        const url = this.config.accessHttpURL + '/auth/disableTwoFA';
         return this.kbRequest.makeGetRequest(url).toPromise().then(user => {
             this.setSessionUser(user);
         });
@@ -83,14 +83,14 @@ export class AuthenticationService {
 
     public emailAvailable(emailAddress) {
         return this.kbRequest.makeGetRequest(
-            this.config.guestHttpURL + `/auth/emailExists?emailAddress=${emailAddress}`
+            this.config.accessHttpURL + `/auth/emailExists?emailAddress=${emailAddress}`
         ).toPromise().then(res => {
             return !res;
         });
     }
 
     public validateUserPassword(emailAddress, password) {
-        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/validatePassword', {
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/auth/validatePassword', {
             params: {
                 emailAddress,
                 password
