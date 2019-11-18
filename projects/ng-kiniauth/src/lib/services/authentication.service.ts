@@ -13,6 +13,9 @@ export class AuthenticationService {
     constructor(private kbRequest: KinibindRequestService,
                 private config: KiniAuthModuleConfig) {
 
+        const user = sessionStorage.getItem('loggedInUser');
+        this.authUser.next(JSON.parse(user));
+
     }
 
     public getLoggedInUser(): any {
