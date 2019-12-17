@@ -16,11 +16,14 @@
     <input type="password" placeholder="Enter password" [(ngModel)]="currentPassword">
 </div>
 
-<button type="button" class="but butsm"
-        [disabled]="!emailAvailable || !newEmailAddress || !currentPassword || email.invalid"
-        (click)="saveEmailAddress()">
-    Update email address
-</button>
+<div class="flex align-center justify-between">
+    <div></div>
+    <button type="button" class="but butsm"
+            [disabled]="!emailAvailable || !newEmailAddress || !currentPassword || email.invalid"
+            (click)="saveEmailAddress()">
+        Update email address
+    </button>
+</div>
 
 <p *ngIf="saveError" class="mt2 flex align-center error">
     {{saveError}}

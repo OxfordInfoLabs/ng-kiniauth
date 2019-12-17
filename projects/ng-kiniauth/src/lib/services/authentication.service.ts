@@ -2,6 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { KiniAuthModuleConfig } from '../../ng-kiniauth.module';
 import { KinibindRequestService } from 'ng-kinibind';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import * as _ from 'lodash';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,8 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 export class AuthenticationService {
 
     public authUser: BehaviorSubject<any> = new BehaviorSubject(null);
+    public sessionData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    public loadingRequests: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(private kbRequest: KinibindRequestService,
                 private config: KiniAuthModuleConfig) {
@@ -16,13 +19,24 @@ export class AuthenticationService {
         const user = sessionStorage.getItem('loggedInUser');
         this.authUser.next(JSON.parse(user));
 
+        const sessionData = sessionStorage.getItem('sessionData');
+        if (sessionData && _.filter(JSON.parse(sessionData)).length) {
+            this.sessionData.next(JSON.parse(sessionData));
+        }
     }
 
     public getLoggedInUser(): any {
         return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user').toPromise()
             .then(res => {
                 if (res) {
-                    this.setSessionUser(res);
+                    this.setSessionUser(res).then(() => {
+                        const sessionData = sessionStorage.getItem('sessionData');
+                        if (sessionData && _.filter(JSON.parse(sessionData)).length) {
+                            this.sessionData.next(JSON.parse(sessionData));
+                        } else {
+                            this.getSessionData();
+                        }
+                    });
                     return res;
                 }
                 return null;
@@ -32,23 +46,23 @@ export class AuthenticationService {
     public login(username: string, password: string) {
         const request = this.config.guestHttpURL + `/auth/login?emailAddress=${username}&password=${password}`;
         return this.kbRequest.makeGetRequest(request).toPromise().then((user: any) => {
-
             if (user === 'REQUIRES_2FA') {
                 return user;
             } else {
-                return this.setSessionUser(user);
+                return this.getSessionData().then(() => {
+                    return this.setSessionUser(user);
+                });
             }
         });
     }
 
     public generateTwoFactorSettings() {
-        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/auth/twoFactorSettings')
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/twoFactorSettings')
             .toPromise()
     }
 
     public authenticateNewTwoFactor(code, secret) {
-        return this.kbRequest.makeGetRequest(
-            this.config.accessHttpURL + '/auth/newTwoFactor',
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/newTwoFactor',
             {
                 params: { code, secret }
             }
@@ -74,7 +88,7 @@ export class AuthenticationService {
     }
 
     public disableTwoFactor() {
-        const url = this.config.accessHttpURL + '/auth/disableTwoFA';
+        const url = this.config.accessHttpURL + '/user/disableTwoFA';
         return this.kbRequest.makeGetRequest(url).toPromise().then(user => {
             this.setSessionUser(user);
         });
@@ -99,6 +113,22 @@ export class AuthenticationService {
                 password
             }
         }).toPromise();
+    }
+
+    public changeUserDetails(newEmailAddress, newName, password, userId?) {
+        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeDetails', {
+            params: {
+                newEmailAddress,
+                newName,
+                password,
+                userId
+            }
+        }).toPromise().then(user => {
+            if (!userId) {
+                this.setSessionUser(user);
+            }
+            return user;
+        });
     }
 
     public changeUserEmailAddress(newEmailAddress, password) {
@@ -138,18 +168,38 @@ export class AuthenticationService {
     }
 
     public getGoogleAuthSettings() {
-        return true;
+        return Promise.resolve(123);
     }
 
     public logout() {
         this.authUser.next(null);
+        this.sessionData.next(null);
         sessionStorage.clear();
-        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/logout').toPromise();
+        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/auth/logout')
+            .toPromise();
     }
 
     public setSessionUser(user) {
         sessionStorage.setItem('loggedInUser', JSON.stringify(user));
         this.authUser.next(user);
-        return user;
+        return Promise.resolve(user);
+    }
+
+    public setLoadingRequest(value) {
+        this.loadingRequests.next(value);
+    }
+
+    private getSessionData() {
+        return this.kbRequest.makeGetRequest(this.config.guestHttpURL + '/session')
+            .toPromise()
+            .then(sessionData => {
+                if (sessionData) {
+                    sessionStorage.setItem('sessionData', JSON.stringify(sessionData));
+                    this.sessionData.next(sessionData);
+                } else {
+                    sessionStorage.removeItem('sessionData');
+                    this.sessionData.next(null);
+                }
+            });
     }
 }

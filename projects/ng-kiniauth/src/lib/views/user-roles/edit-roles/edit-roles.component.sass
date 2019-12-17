@@ -1,0 +1,27 @@
+@import "../../../sass/table"
+
+table
+    background-color: white
+
+tbody
+    tr
+        td
+            padding-left: 1rem
+        &.thead
+            th
+                border-bottom: 1px solid
+                padding-bottom: .25em
+                border-color: #ddd
+                font-weight: bold
+        &:not(.thead)
+            &:hover
+                background-color: whitesmoke
+                cursor: pointer
+
+.apply-bar
+    position: fixed
+    bottom: 0
+    right: 0
+    left: 0
+    background-color: white
+    border-top: 2px solid #dddddd
