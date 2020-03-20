@@ -14,7 +14,7 @@
 
         <p class="error" *ngIf="loginError">Email or password incorrect, please check and try again.</p>
 
-        <button class="button small-button" *ngIf="!loading" (click)="login()"
+        <button class="button small-button login-button" *ngIf="!loading" (click)="login()"
                 [disabled]="!email || !password">Sign in
         </button>
     </div>
@@ -30,7 +30,7 @@
 
         <p class="error" *ngIf="twoFAError">Invalid code, please try again.</p>
 
-        <button class="button small-button" *ngIf="!loading" (click)="authenticate()"
+        <button class="button small-button login-button" *ngIf="!loading" (click)="authenticate()"
                 [disabled]="!twoFACode">Login
         </button>
 
