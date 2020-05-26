@@ -11,15 +11,15 @@
                 </ng-template>
 
                 <ng-template [ngIf]="!_.reject(assignableRole.roles).length">
-                <span class="mr1 flex" style="align-items: baseline" *ngIf="assignableRole.scope === 'ACCOUNT'">
-                    <input type="checkbox" value="OWNER" style="height: auto; margin: 0 .25rem 0 0"
+                <span class="mr1 flex align-baseline" *ngIf="assignableRole.scope === 'ACCOUNT'">
+                    <input type="checkbox" value="OWNER" class="role-checkbox"
                            [checked]="checked[assignableRole.scopeId]['owner']"
                            (change)="updateRole($event, assignableRole.scopeId)">
                     Owner
                 </span>
                     <ng-template ngFor let-roleIndex [ngForOf]="Object.keys(assignableRole.roles)">
-                    <span class="mr1 flex" style="align-items: baseline" *ngIf="assignableRole.roles[roleIndex]">
-                        <input type="checkbox" style="height: auto; margin: 0 .25rem 0 0"
+                    <span class="mr1 flex align-baseline" *ngIf="assignableRole.roles[roleIndex]">
+                        <input type="checkbox" class="role-checkbox"
                                *ngIf="assignableRole.roles[roleIndex]"
                                [disabled]="disabled[assignableRole.scopeId]"
                                [(ngModel)]="checked[assignableRole.scopeId][assignableRole.roles[roleIndex].id]"
@@ -33,7 +33,7 @@
                 </ng-template>
             </div>
 
-            <p class="mb0 mt050" style="color: darkred"
+            <p class="mb0 mt050 text-red"
                *ngIf="errors[assignableRole.scopeId]">{{errors[assignableRole.scopeId]}}</p>
         </td>
 

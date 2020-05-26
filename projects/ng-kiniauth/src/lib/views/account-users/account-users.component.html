@@ -1,7 +1,7 @@
 <div class="flex align-center justify-between flex-wrap ">
 
-    <input type="text" (keyup)="search($event.target.value)" style="margin-bottom: 0"
-           placeholder="Search users" class="flex1 mr050 mt0 desktop-table-view">
+    <input type="text" (keyup)="search($event.target.value)"
+           placeholder="Search users" class="flex1 mr050 mt0 desktop-table-view invite-user">
 
     <button class="but" [routerLink]="['/invite-user']">Invite User</button>
 
@@ -36,7 +36,7 @@
     <table class="mt1">
         <thead>
         <tr>
-<!--            <th class="pl1" style="width: 50px">-->
+<!--            <th class="pl1">-->
 <!--                <div *ngIf="!allSelected" (click)="toggleSelectAllUsers()"-->
 <!--                     class="item-selection flex align-center justify-center mr1"></div>-->
 
@@ -67,7 +67,7 @@
             <td class="status" (click)="viewUser(user)">
                 <span class="{{user.status}}">{{user.status}}</span>
             </td>
-            <td class="actions" style="text-align: right">
+            <td class="actions text-right">
                 <button mat-button [matMenuTriggerFor]="menu" color="primary">
                     Actions <mat-icon>keyboard_arrow_down</mat-icon>
                 </button>
@@ -79,7 +79,7 @@
         </tbody>
     </table>
 </div>
-<mat-paginator style="background: transparent" class="domain-paginator flex1 pl050 mb0"
+<mat-paginator class="user-paginator flex1 pl050 mb0"
                [length]="usersSize" [pageSize]="pageSize.getValue()"
                [pageSizeOptions]="[10, 25, 50, 100]"
                (page)="updatePage($event)"></mat-paginator>
