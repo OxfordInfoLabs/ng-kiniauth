@@ -12,6 +12,7 @@ import { BaseComponent } from '../base-component';
 export class AccountSummaryComponent extends BaseComponent implements OnInit, OnDestroy {
 
     @Input() authenticationService: any;
+    @Input() showPasswordReset = true;
 
     public security: any;
     public twoFactorConfig: any;
