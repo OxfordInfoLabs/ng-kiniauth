@@ -29,15 +29,18 @@ export class AuthenticationService {
         return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user').toPromise()
             .then(res => {
                 if (res) {
-                    this.setSessionUser(res).then(() => {
+                    return this.setSessionUser(res).then(() => {
                         const sessionData = sessionStorage.getItem('sessionData');
                         if (sessionData && _.filter(JSON.parse(sessionData)).length) {
                             this.sessionData.next(JSON.parse(sessionData));
+                            return res;
                         } else {
-                            this.getSessionData();
+                            return this.getSessionData().then(() => {
+                                return res;
+                            });
                         }
                     });
-                    return res;
+
                 }
                 return null;
             });
@@ -196,9 +199,11 @@ export class AuthenticationService {
                 if (sessionData) {
                     sessionStorage.setItem('sessionData', JSON.stringify(sessionData));
                     this.sessionData.next(sessionData);
+                    return sessionData;
                 } else {
                     sessionStorage.removeItem('sessionData');
                     this.sessionData.next(null);
+                    return null;
                 }
             });
     }
