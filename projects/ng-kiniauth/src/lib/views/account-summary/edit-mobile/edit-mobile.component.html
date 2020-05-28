@@ -5,12 +5,12 @@
 
 <div class="mb2">
     <label>Enter the new mobile number you want to use.</label>
-    <input type="text" placeholder="New mobile number" [(ngModel)]="newMobile">
+    <input type="text" placeholder="New mobile number" [(ngModel)]="newMobile" maxlength="30">
 </div>
 
 <div class="mb2">
     <label>Enter current password to confirm change.</label>
-    <input type="password" placeholder="Enter password" [(ngModel)]="currentPassword">
+    <input type="password" placeholder="Enter password" [(ngModel)]="currentPassword" maxlength="100">
 </div>
 
 <div class="flex align-center justify-between">

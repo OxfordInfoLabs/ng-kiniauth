@@ -6,14 +6,14 @@
 <div class="mb2">
     <label>Enter the new email address you want to use.</label>
     <input type="email" placeholder="New email address" [(ngModel)]="newEmailAddress"
-           (change)="checkEmail()" email #email="ngModel">
+           (change)="checkEmail()" email #email="ngModel" maxlength="200">
     <span style="color: red" *ngIf="!emailAvailable">An account already exists with this email address</span>
     <span style="color: red" *ngIf="email.invalid">Not a valid email address</span>
 </div>
 
 <div class="mb2">
     <label>Enter current password to confirm email change.</label>
-    <input type="password" placeholder="Enter password" [(ngModel)]="currentPassword">
+    <input type="password" placeholder="Enter password" [(ngModel)]="currentPassword" maxlength="100">
 </div>
 
 <div class="flex align-center justify-between">
