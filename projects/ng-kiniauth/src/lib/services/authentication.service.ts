@@ -31,7 +31,6 @@ export class AuthenticationService {
             promise = this.getSessionData();
         }
         return promise.then(() => {
-            console.log(this.sessionData.getValue());
             return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user').toPromise()
                 .then(res => {
                     if (res) {
