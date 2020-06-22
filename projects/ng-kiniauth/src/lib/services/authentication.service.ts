@@ -26,24 +26,31 @@ export class AuthenticationService {
     }
 
     public getLoggedInUser(): any {
-        return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user').toPromise()
-            .then(res => {
-                if (res) {
-                    return this.setSessionUser(res).then(() => {
-                        const sessionData = sessionStorage.getItem('sessionData');
-                        if (sessionData && _.filter(JSON.parse(sessionData)).length) {
-                            this.sessionData.next(JSON.parse(sessionData));
-                            return res;
-                        } else {
-                            return this.getSessionData().then(() => {
+        let promise = Promise.resolve(true);
+        if (!this.sessionData.getValue()) {
+            promise = this.getSessionData();
+        }
+        return promise.then(() => {
+            console.log(this.sessionData.getValue());
+            return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user').toPromise()
+                .then(res => {
+                    if (res) {
+                        return this.setSessionUser(res).then(() => {
+                            const sessionData = sessionStorage.getItem('sessionData');
+                            if (sessionData && _.filter(JSON.parse(sessionData)).length) {
+                                this.sessionData.next(JSON.parse(sessionData));
                                 return res;
-                            });
-                        }
-                    });
+                            } else {
+                                return this.getSessionData().then(() => {
+                                    return res;
+                                });
+                            }
+                        });
 
-                }
-                return null;
-            });
+                    }
+                    return null;
+                });
+        });
     }
 
     public login(username: string, password: string) {
