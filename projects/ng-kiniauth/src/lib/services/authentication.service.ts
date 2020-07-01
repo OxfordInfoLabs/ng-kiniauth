@@ -1,9 +1,8 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { KiniAuthModuleConfig } from '../../ng-kiniauth.module';
 import { KinibindRequestService } from 'ng-kinibind';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import * as _ from 'lodash';
-import * as bcrypt from 'bcryptjs';
 import * as sha512 from 'js-sha512' ;
 
 @Injectable({
@@ -226,7 +225,7 @@ export class AuthenticationService {
         const loggedInUser = this.authUser.getValue();
         if (loggedInUser && sessionData && sessionData.sessionSalt) {
             const hash = sha512.sha512(password + loggedInUser.emailAddress);
-            hashedPassword = bcrypt.hashSync(hash, '$2a$10$' + sessionData.sessionSalt);
+            hashedPassword = sha512.sha512(hash + sessionData.sessionSalt);
         }
         return hashedPassword || password;
     }
