@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { BaseComponent } from '../../base-component';
@@ -6,7 +6,8 @@ import { BaseComponent } from '../../base-component';
 @Component({
     selector: 'ka-edit-details',
     templateUrl: './edit-details.component.html',
-    styleUrls: ['./edit-details.component.sass']
+    styleUrls: ['./edit-details.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class EditDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
 
@@ -49,24 +50,17 @@ export class EditDetailsComponent extends BaseComponent implements OnInit, OnDes
     }
 
     public saveEmailAddress() {
-        this.authService.validateUserPassword(this.user.emailAddress, this.currentPassword)
-            .then(res => {
-                if (res) {
-                    this.saveError = '';
-                    this.authService.changeUserDetails(this.newEmailAddress, this.newName, this.currentPassword, this.user.id)
-                        .then(user => {
-                            this.user = user;
-                            this.saved.emit(user);
-                        })
-                        .catch(err => {
-                            if (err.error.validationErrors.emailAddress.email.errorMessage) {
-                                this.saveError = 'Email error: ' + err.error.validationErrors.emailAddress.email.errorMessage;
-                            } else {
-                                this.saveError = 'There was a problem updating your details, please check and try again.'
-                            }
-                        });
+        this.saveError = '';
+        this.authService.changeUserDetails(this.newEmailAddress, this.newName, this.currentPassword, this.user.id)
+            .then(user => {
+                this.user = user;
+                this.saved.emit(user);
+            })
+            .catch(err => {
+                if (err.error.validationErrors.emailAddress.email.errorMessage) {
+                    this.saveError = 'Email error: ' + err.error.validationErrors.emailAddress.email.errorMessage;
                 } else {
-                    this.saveError = 'Password incorrect. Details have not been updated.';
+                    this.saveError = 'There was a problem updating your details, please check and try again.'
                 }
             });
     }

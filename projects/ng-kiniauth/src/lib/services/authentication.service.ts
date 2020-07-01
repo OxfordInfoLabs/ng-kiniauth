@@ -3,6 +3,8 @@ import { KiniAuthModuleConfig } from '../../ng-kiniauth.module';
 import { KinibindRequestService } from 'ng-kinibind';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import * as _ from 'lodash';
+import * as bcrypt from 'bcryptjs';
+import * as sha512 from 'js-sha512' ;
 
 @Injectable({
     providedIn: 'root'
@@ -119,7 +121,7 @@ export class AuthenticationService {
         return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/auth/validatePassword', {
             params: {
                 emailAddress,
-                password
+                password: this.getHashedPassword(password)
             }
         }).toPromise();
     }
@@ -129,26 +131,28 @@ export class AuthenticationService {
             params: {
                 newEmailAddress,
                 newName,
-                password,
-                userId
+                password: this.getHashedPassword(password)
             }
-        }).toPromise().then(user => {
-            if (!userId) {
-                this.setSessionUser(user);
+        }).toPromise().then(res => {
+            if (res) {
+                return this.getLoggedInUser();
             }
-            return user;
         });
     }
 
     public changeUserEmailAddress(newEmailAddress, password) {
+        const sessionData = this.sessionData.getValue();
+        const params: any = {newEmailAddress, password};
+        if (sessionData.sessionSalt) {
+            params.password = this.getHashedPassword(password);
+            params.hashedPassword = sha512.sha512(password + newEmailAddress);
+        }
         return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeEmail', {
-            params: {
-                newEmailAddress,
-                password
+            params
+        }).toPromise().then(res => {
+            if (res) {
+                return this.getLoggedInUser();
             }
-        }).toPromise().then(user => {
-            this.setSessionUser(user);
-            return user;
         });
     }
 
@@ -156,11 +160,12 @@ export class AuthenticationService {
         return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeBackupEmail', {
             params: {
                 newEmailAddress,
-                password
+                password: this.getHashedPassword(password)
             }
-        }).toPromise().then(user => {
-            this.setSessionUser(user);
-            return user;
+        }).toPromise().then(res => {
+            if (res) {
+                return this.getLoggedInUser();
+            }
         });
     }
 
@@ -168,11 +173,12 @@ export class AuthenticationService {
         return this.kbRequest.makeGetRequest(this.config.accessHttpURL + '/user/changeMobile', {
             params: {
                 newMobile,
-                password
+                password: this.getHashedPassword(password)
             }
-        }).toPromise().then(user => {
-            this.setSessionUser(user);
-            return user;
+        }).toPromise().then(res => {
+            if (res) {
+                return this.getLoggedInUser();
+            }
         });
     }
 
@@ -212,5 +218,16 @@ export class AuthenticationService {
                     return null;
                 }
             });
+    }
+
+    private getHashedPassword(password) {
+        let hashedPassword;
+        const sessionData = this.sessionData.getValue();
+        const loggedInUser = this.authUser.getValue();
+        if (loggedInUser && sessionData && sessionData.sessionSalt) {
+            const hash = sha512.sha512(password + loggedInUser.emailAddress);
+            hashedPassword = bcrypt.hashSync(hash, '$2a$10$' + sessionData.sessionSalt);
+        }
+        return hashedPassword || password;
     }
 }

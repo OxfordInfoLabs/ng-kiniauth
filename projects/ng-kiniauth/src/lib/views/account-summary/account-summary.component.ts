@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Subject } from 'rxjs/internal/Subject';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -7,7 +7,8 @@ import { BaseComponent } from '../base-component';
 @Component({
     selector: 'ka-account-summary',
     templateUrl: './account-summary.component.html',
-    styleUrls: ['./account-summary.component.sass']
+    styleUrls: ['./account-summary.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AccountSummaryComponent extends BaseComponent implements OnInit, OnDestroy {
 

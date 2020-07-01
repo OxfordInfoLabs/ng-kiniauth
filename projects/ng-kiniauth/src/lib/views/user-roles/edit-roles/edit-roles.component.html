@@ -1,4 +1,4 @@
-<table *ngIf="assignableRoles" [ngStyle]="{marginBottom: hideApply ? '0' : '100px'}">
+<table class="edit-roles" *ngIf="assignableRoles" [ngStyle]="{marginBottom: hideApply ? '0' : '100px'}">
     <tbody *ngFor="let assignableRole of _.orderBy(assignableRoles, ['scopeId'], ['asc'])">
     <tr class="thead">
         <th>{{assignableRole.scopeObjectDescription}}</th>

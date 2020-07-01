@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
@@ -7,7 +7,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 @Component({
     selector: 'ka-user-roles',
     templateUrl: './user-roles.component.html',
-    styleUrls: ['./user-roles.component.sass']
+    styleUrls: ['./user-roles.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class UserRolesComponent implements OnInit {
 

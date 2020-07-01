@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import * as _ from 'lodash';
 
 @Component({
     selector: 'ka-edit-roles',
     templateUrl: './edit-roles.component.html',
-    styleUrls: ['./edit-roles.component.sass']
+    styleUrls: ['./edit-roles.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class EditRolesComponent implements OnInit {
 

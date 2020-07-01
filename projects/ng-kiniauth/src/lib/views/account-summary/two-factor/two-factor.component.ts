@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { BaseComponent } from '../../base-component';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { Router } from '@angular/router';
@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'ka-two-factor',
     templateUrl: './two-factor.component.html',
-    styleUrls: ['./two-factor.component.sass']
+    styleUrls: ['./two-factor.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class TwoFactorComponent extends BaseComponent implements OnInit {
 

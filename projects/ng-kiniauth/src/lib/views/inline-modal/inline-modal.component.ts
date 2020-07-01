@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'ka-inline-modal',
     templateUrl: './inline-modal.component.html',
-    styleUrls: ['./inline-modal.component.sass']
+    styleUrls: ['./inline-modal.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class InlineModalComponent implements OnInit {
 

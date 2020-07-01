@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { BaseComponent } from '../../base-component';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -6,7 +6,8 @@ import { Subscription } from 'rxjs/internal/Subscription';
 @Component({
     selector: 'ka-edit-email',
     templateUrl: './edit-email.component.html',
-    styleUrls: ['./edit-email.component.sass']
+    styleUrls: ['./edit-email.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class EditEmailComponent extends BaseComponent implements OnInit, OnDestroy {
 
@@ -42,24 +43,17 @@ export class EditEmailComponent extends BaseComponent implements OnInit, OnDestr
     }
 
     public saveEmailAddress() {
-        this.authService.validateUserPassword(this.user.emailAddress, this.currentPassword)
-            .then(res => {
-                if (res) {
-                    this.saveError = '';
-                    this.authService.changeUserEmailAddress(this.newEmailAddress, this.currentPassword)
-                        .then(user => {
-                            this.user = user;
-                            this.saved.emit(user);
-                        })
-                        .catch(err => {
-                            if (err.error.validationErrors.emailAddress.email.errorMessage) {
-                                this.saveError = 'Email error: ' + err.error.validationErrors.emailAddress.email.errorMessage;
-                            } else {
-                                this.saveError = 'There was a problem changing the email address, please check and try again.'
-                            }
-                        });
+        this.saveError = '';
+        this.authService.changeUserEmailAddress(this.newEmailAddress, this.currentPassword)
+            .then(user => {
+                this.user = user;
+                this.saved.emit(user);
+            })
+            .catch(err => {
+                if (err.error.validationErrors.emailAddress.email.errorMessage) {
+                    this.saveError = 'Email error: ' + err.error.validationErrors.emailAddress.email.errorMessage;
                 } else {
-                    this.saveError = 'Password incorrect. Email address has not been updated.';
+                    this.saveError = 'There was a problem changing the email address, please check and try again.'
                 }
             });
     }

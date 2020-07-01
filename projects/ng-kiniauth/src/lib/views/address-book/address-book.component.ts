@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, ViewEncapsulation } from '@angular/core';
 import { KinibindModel, KinibindRequestService } from 'ng-kinibind';
 import { ContactService } from '../../services/contact.service';
 
 @Component({
     selector: 'ka-address-book',
     templateUrl: './address-book.component.html',
-    styleUrls: ['./address-book.component.sass']
+    styleUrls: ['./address-book.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AddressBookComponent {
 

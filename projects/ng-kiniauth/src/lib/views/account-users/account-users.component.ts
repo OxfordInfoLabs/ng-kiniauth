@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import * as _ from 'lodash';
@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'ka-account-users',
     templateUrl: './account-users.component.html',
-    styleUrls: ['./account-users.component.sass']
+    styleUrls: ['./account-users.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AccountUsersComponent implements OnInit {
 

@@ -1,11 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { BaseComponent } from '../../base-component';
 
 @Component({
     selector: 'ka-edit-mobile',
     templateUrl: './edit-mobile.component.html',
-    styleUrls: ['./edit-mobile.component.sass']
+    styleUrls: ['./edit-mobile.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class EditMobileComponent extends BaseComponent implements OnInit {
 
@@ -29,24 +30,17 @@ export class EditMobileComponent extends BaseComponent implements OnInit {
     }
 
     public saveMobileNumber() {
-        this.authService.validateUserPassword(this.user.emailAddress, this.currentPassword)
-            .then(res => {
-                if (res) {
-                    this.saveError = '';
-                    this.authService.changeUserMobile(this.newMobile, this.currentPassword)
-                        .then(user => {
-                            this.user = user;
-                            this.saved.emit(user);
-                        })
-                        .catch(err => {
-                            if (err.error.validationErrors.mobileNumber.regexp.errorMessage) {
-                                this.saveError = 'Number error: ' + err.error.validationErrors.mobileNumber.regexp.errorMessage;
-                            } else {
-                                this.saveError = 'There was a problem changing the mobile number, please check and try again.'
-                            }
-                        });
+        this.saveError = '';
+        this.authService.changeUserMobile(this.newMobile, this.currentPassword)
+            .then(user => {
+                this.user = user;
+                this.saved.emit(user);
+            })
+            .catch(err => {
+                if (err.error.validationErrors.mobileNumber.regexp.errorMessage) {
+                    this.saveError = 'Number error: ' + err.error.validationErrors.mobileNumber.regexp.errorMessage;
                 } else {
-                    this.saveError = 'Password incorrect. Mobile number has not been updated.';
+                    this.saveError = 'There was a problem changing the mobile number, please check and try again.'
                 }
             });
     }

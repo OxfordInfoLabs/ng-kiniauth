@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RoleService } from '../../services/role.service';
 import * as _ from 'lodash';
 import { AccountService } from '../../services/account.service';
@@ -7,7 +7,8 @@ import { Location } from '@angular/common';
 @Component({
     selector: 'ka-invite-user',
     templateUrl: './invite-user.component.html',
-    styleUrls: ['./invite-user.component.sass']
+    styleUrls: ['./invite-user.component.sass'],
+    encapsulation: ViewEncapsulation.None
 })
 export class InviteUserComponent implements OnInit {
 
