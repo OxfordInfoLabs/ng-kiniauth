@@ -26,9 +26,9 @@ export class AuthenticationService {
         }
     }
 
-    public getLoggedInUser(): any {
+    public getLoggedInUser(reloadSession?): any {
         let promise = Promise.resolve(true);
-        if (!this.sessionData.getValue()) {
+        if (reloadSession || !this.sessionData.getValue()) {
             promise = this.getSessionData();
         }
         return promise.then(() => {
@@ -46,7 +46,6 @@ export class AuthenticationService {
                                 });
                             }
                         });
-
                     }
                     return null;
                 });
